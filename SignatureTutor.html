@@ -5,6 +5,7 @@
   <title>SignatureTutor</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+/* @inline:app-css:start */
 /* SignatureTutor — hi-fi glass design system (Apple-style, light) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Allura&family=Sacramento&family=Homemade+Apple&family=Caveat:wght@400;500;600;700&family=Shadows+Into+Light&display=swap');
 
@@ -464,6 +465,7 @@ body {
       .worksheet-paper { position: absolute !important; left: 0; top: 0; width: 100% !important; box-shadow: none !important; border: none !important; }
       .tweaks, .topbar { display: none !important; }
     }
+/* @inline:app-css:end */
   </style>
 </head>
 <body>
@@ -475,7 +477,8 @@ body {
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
-  <script type="text/babel" data-presets="react">
+<script type="text/babel" data-presets="react">
+// @inline:signature-engine:start
 // Signature rendering — deterministic procedural signatures from a name.
 // Given (name, styleKey), produce an SVG path and stroke data so the same
 // signature can be drawn as trace, ghost, or animated stroke-by-stroke.
@@ -748,9 +751,11 @@ function StrokeArrow({ d, index }) {
 }
 
 Object.assign(window, { buildSignature, SignatureSVG });
-  </script>
+// @inline:signature-engine:end
+</script>
 
-  <script type="text/babel" data-presets="react">
+<script type="text/babel" data-presets="react">
+// @inline:screens-1-3:start
 // Individual screen components — hi-fi.
 // Exported globally so main app can compose them.
 
@@ -960,9 +965,11 @@ function PreviewScreen({ name, style, opts, setOpts, onHub, onBack }) {
 }
 
 Object.assign(window, { STYLE_LIST, Logo, StepProgress, NameScreen, StyleScreen, PreviewScreen });
-  </script>
+// @inline:screens-1-3:end
+</script>
 
-  <script type="text/babel" data-presets="react">
+<script type="text/babel" data-presets="react">
+// @inline:screens-4-6:start
 // Screens 4-6: Hub, Worksheet, Practice, Export
 
 // ─────────────── Hub ───────────────
@@ -1353,9 +1360,11 @@ function ExportModal({ name, style, opts, onClose }) {
 }
 
 Object.assign(window, { HubScreen, WorksheetScreen, PracticeScreen, ExportModal });
-  </script>
+// @inline:screens-4-6:end
+</script>
 
-  <script type="text/babel" data-presets="react">
+<script type="text/babel" data-presets="react">
+// @inline:app:start
     const TWEAK_DEFAULTS = {
       "sampleName": "Alex Morgan",
       "accentColor": "#c6522b",
@@ -1517,6 +1526,7 @@ Object.assign(window, { HubScreen, WorksheetScreen, PracticeScreen, ExportModal 
     }
 
     ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
-  </script>
+// @inline:app:end
+</script>
 </body>
 </html>

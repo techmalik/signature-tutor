@@ -451,3 +451,9 @@ body {
 /* Hide scrollbars on inner panes */
 .noscroll { scrollbar-width: none; }
 .noscroll::-webkit-scrollbar { display: none; }
+    @media print {
+      body * { visibility: hidden !important; }
+      .worksheet-paper, .worksheet-paper * { visibility: visible !important; }
+      .worksheet-paper { position: absolute !important; left: 0; top: 0; width: 100% !important; box-shadow: none !important; border: none !important; }
+      .tweaks, .topbar { display: none !important; }
+    }
