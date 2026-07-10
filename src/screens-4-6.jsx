@@ -1,7 +1,7 @@
 // Screens 4-6: Hub, Worksheet, Practice, Export
 
 // ─────────────── Hub ───────────────
-function HubScreen({ name, style, opts, go, onBack }) {
+function HubScreen({ name, style, opts, variant, go, onBack }) {
   return (
     <div className="screen wrap" style={{ paddingTop: 24 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
@@ -18,7 +18,7 @@ function HubScreen({ name, style, opts, go, onBack }) {
       {/* Hero strip */}
       <div className="card" style={{ padding: 32, marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 180 }}>
         <div style={{ height: 140, width: '100%' }}>
-          <SignatureSVG name={name} style={style} opts={opts} strokeW={2.8} height={140} />
+          <SignatureSVG name={name} style={style} opts={opts} variant={variant} renderMode="ink" strokeW={2.8} height={140} />
         </div>
       </div>
 
@@ -69,7 +69,7 @@ function HubCard({ icon, title, desc, cta, onClick, primary }) {
 }
 
 // ─────────────── Worksheet ───────────────
-function WorksheetScreen({ name, style, opts, onBack, onExport }) {
+function WorksheetScreen({ name, style, opts, variant, onBack, onExport }) {
   const rows = [
     { stage: 'guide', arrows: true, label: 'Full · arrows' },
     { stage: 'guide', arrows: true, label: 'Full · arrows' },
@@ -124,6 +124,8 @@ function WorksheetScreen({ name, style, opts, onBack, onExport }) {
                   name={name}
                   style={style}
                   opts={opts}
+                  variant={variant}
+                  renderMode="line"
                   strokeColor="#14110d"
                   strokeW={2.2}
                   opacity={r.stage === 'guide' ? 1 : r.stage === 'fade50' ? 0.35 : 0.14}
@@ -143,7 +145,7 @@ function WorksheetScreen({ name, style, opts, onBack, onExport }) {
 }
 
 // ─────────────── Practice canvas ───────────────
-function PracticeScreen({ name, style, opts, onBack }) {
+function PracticeScreen({ name, style, opts, variant, onBack }) {
   const [row, setRow] = React.useState(0);
   const [penColor, setPenColor] = React.useState('#14110d');
   const [score, setScore] = React.useState(null);
@@ -293,7 +295,7 @@ function PracticeScreen({ name, style, opts, onBack }) {
         {/* Ghost layer */}
         {showGhost && cur.opacity > 0 && (
           <div style={{ position: 'absolute', inset: 30, pointerEvents: 'none' }}>
-            <SignatureSVG name={name} style={style} opts={opts} strokeColor="#14110d" strokeW={2.6} opacity={cur.opacity} showArrows={cur.arrows} height={280} />
+            <SignatureSVG name={name} style={style} opts={opts} variant={variant} renderMode="line" strokeColor="#14110d" strokeW={2.6} opacity={cur.opacity} showArrows={cur.arrows} height={280} />
           </div>
         )}
         {/* Drawing canvas */}
@@ -336,7 +338,7 @@ function PracticeScreen({ name, style, opts, onBack }) {
 }
 
 // ─────────────── Export modal ───────────────
-function ExportModal({ name, style, opts, onClose }) {
+function ExportModal({ name, style, opts, variant, onClose }) {
   const [copied, setCopied] = React.useState(false);
   const copyLink = () => {
     const params = new URLSearchParams({ name, style, f: opts.flourish, s: opts.slant, w: opts.weight });
@@ -358,7 +360,7 @@ function ExportModal({ name, style, opts, onClose }) {
         </div>
 
         <div style={{ padding: '20px 24px', background: '#fefdfa', border: '0.5px solid rgba(20,17,13,0.08)', borderRadius: 12, marginBottom: 18, height: 110 }}>
-          <SignatureSVG name={name} style={style} opts={opts} height={80} strokeW={2.4} />
+          <SignatureSVG name={name} style={style} opts={opts} variant={variant} renderMode="ink" height={80} strokeW={2.4} />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>

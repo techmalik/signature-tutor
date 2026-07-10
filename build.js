@@ -22,7 +22,10 @@
 // `window`. Do not reorder existing entries without checking that.
 const MANIFEST = [
   { id: 'app-css', file: 'src/app.css', type: 'css' },
-  { id: 'signature-engine', file: 'src/signature-engine.jsx', type: 'babel' },
+  { id: 'vendor-freehand', file: 'src/vendor/perfect-freehand.js', type: 'plain' },
+  { id: 'glyph-data', file: 'src/glyph-data.js', type: 'plain' },
+  { id: 'engine-core', file: 'src/engine-core.js', type: 'plain' },
+  { id: 'signature-react', file: 'src/signature-react.jsx', type: 'babel' },
   { id: 'screens-1-3', file: 'src/screens-1-3.jsx', type: 'babel' },
   { id: 'screens-4-6', file: 'src/screens-4-6.jsx', type: 'babel' },
   { id: 'app', file: 'src/app.jsx', type: 'babel' },

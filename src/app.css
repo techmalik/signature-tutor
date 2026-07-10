@@ -1,5 +1,5 @@
 /* SignatureTutor — hi-fi glass design system (Apple-style, light) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Dancing+Script:wght@400;500;600;700&family=Great+Vibes&family=Allura&family=Sacramento&family=Homemade+Apple&family=Caveat:wght@400;500;600;700&family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&display=swap');
 
 :root {
   --bg-0: #f4f2ee;
@@ -438,15 +438,6 @@ body {
 /* Small pulse dot for "live" */
 .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(74,122,79,0.6); animation: pulse 1.6s infinite; }
 @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(74,122,79,0.5); } 70% { box-shadow: 0 0 0 6px rgba(74,122,79,0); } 100% { box-shadow: 0 0 0 0 rgba(74,122,79,0); } }
-
-/* Signature render families */
-.fam-cursive   { font-family: 'Dancing Script', cursive; font-weight: 600; }
-.fam-executive { font-family: 'Allura', cursive; font-weight: 400; letter-spacing: 0.01em; }
-.fam-loopy     { font-family: 'Great Vibes', cursive; font-weight: 400; }
-.fam-scrawl    { font-family: 'Homemade Apple', cursive; font-weight: 400; }
-.fam-monogram  { font-family: var(--serif); font-weight: 500; font-style: italic; letter-spacing: 0.02em; }
-.fam-sans      { font-family: var(--sans); font-weight: 500; letter-spacing: -0.01em; }
-.fam-sacramento { font-family: 'Sacramento', cursive; }
 
 /* Hide scrollbars on inner panes */
 .noscroll { scrollbar-width: none; }

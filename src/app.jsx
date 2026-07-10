@@ -9,27 +9,49 @@
       const [tweaks, setTweaks] = React.useState(TWEAK_DEFAULTS);
       const [editMode, setEditMode] = React.useState(false);
 
+      const V1_STYLE_MIGRATION = { cursive: 'flow', loopy: 'flourished', sans: 'minimal' };
+      const DEFAULT_STYLE = 'flow';
+      const defaultOptsFor = (styleKey) => {
+        const recipe = SIG_STYLES[styleKey] || SIG_STYLES[DEFAULT_STYLE];
+        return { flourish: recipe.flourish, slant: recipe.slant, weight: recipe.weight, legibility: recipe.legibility };
+      };
+
       const initial = React.useMemo(() => {
         try {
-          const saved = JSON.parse(localStorage.getItem('sigtutor:v1') || '{}');
+          const v2 = JSON.parse(localStorage.getItem('sigtutor:v2') || 'null');
+          if (v2) {
+            return {
+              screen: v2.screen || tweaks.startScreen || 'name',
+              name: v2.name || tweaks.sampleName,
+              style: v2.style || DEFAULT_STYLE,
+              opts: { ...defaultOptsFor(v2.style || DEFAULT_STYLE), ...(v2.opts || {}) },
+              variant: v2.variant || 0,
+            };
+          }
+          // One-way migration from the old procedural-wiggle engine's schema.
+          const v1 = JSON.parse(localStorage.getItem('sigtutor:v1') || '{}');
+          const migratedStyle = V1_STYLE_MIGRATION[v1.style] || v1.style || DEFAULT_STYLE;
+          const migratedOpts = { ...defaultOptsFor(migratedStyle), ...(v1.opts || {}) };
           return {
-            screen: saved.screen || tweaks.startScreen || 'name',
-            name: saved.name || tweaks.sampleName,
-            style: saved.style || 'cursive',
-            opts: saved.opts || { flourish: 0.7, slant: 0.14, weight: 1.0 },
+            screen: v1.screen || tweaks.startScreen || 'name',
+            name: v1.name || tweaks.sampleName,
+            style: migratedStyle,
+            opts: migratedOpts,
+            variant: 0,
           };
         } catch { return null; }
       }, []);
 
       const [screen, setScreen] = React.useState(initial?.screen || 'name');
       const [name, setName] = React.useState(initial?.name || tweaks.sampleName);
-      const [style, setStyle] = React.useState(initial?.style || 'cursive');
-      const [opts, setOpts] = React.useState(initial?.opts || { flourish: 0.7, slant: 0.14, weight: 1.0 });
+      const [style, setStyle] = React.useState(initial?.style || DEFAULT_STYLE);
+      const [opts, setOpts] = React.useState(initial?.opts || defaultOptsFor(DEFAULT_STYLE));
+      const [variant, setVariant] = React.useState(initial?.variant || 0);
       const [showExport, setShowExport] = React.useState(false);
 
       React.useEffect(() => {
-        localStorage.setItem('sigtutor:v1', JSON.stringify({ screen, name, style, opts }));
-      }, [screen, name, style, opts]);
+        localStorage.setItem('sigtutor:v2', JSON.stringify({ screen, name, style, opts, variant }));
+      }, [screen, name, style, opts, variant]);
 
       React.useEffect(() => {
         document.documentElement.style.setProperty('--accent', tweaks.accentColor);
@@ -77,13 +99,19 @@
         else setScreen(s);
       };
 
+      const selectStyle = (key) => {
+        setStyle(key);
+        setOpts(defaultOptsFor(key));
+        setVariant(0);
+      };
+
       let content = null;
       if (screen === 'name') content = <NameScreen name={name} setName={setName} onNext={() => setScreen('style')} />;
-      else if (screen === 'style') content = <StyleScreen name={name} selected={style} setSelected={setStyle} onNext={() => setScreen('preview')} onBack={() => setScreen('name')} />;
-      else if (screen === 'preview') content = <PreviewScreen name={name} style={style} opts={opts} setOpts={setOpts} onHub={() => setScreen('hub')} onBack={() => setScreen('style')} />;
-      else if (screen === 'hub') content = <HubScreen name={name} style={style} opts={opts} go={go} onBack={() => setScreen('preview')} />;
-      else if (screen === 'worksheet') content = <WorksheetScreen name={name} style={style} opts={opts} onBack={() => setScreen('hub')} onExport={() => setShowExport(true)} />;
-      else if (screen === 'practice') content = <PracticeScreen name={name} style={style} opts={opts} onBack={() => setScreen('hub')} />;
+      else if (screen === 'style') content = <StyleScreen name={name} selected={style} setSelected={selectStyle} onNext={() => setScreen('preview')} onBack={() => setScreen('name')} />;
+      else if (screen === 'preview') content = <PreviewScreen name={name} style={style} opts={opts} setOpts={setOpts} variant={variant} setVariant={setVariant} onHub={() => setScreen('hub')} onBack={() => setScreen('style')} />;
+      else if (screen === 'hub') content = <HubScreen name={name} style={style} opts={opts} variant={variant} go={go} onBack={() => setScreen('preview')} />;
+      else if (screen === 'worksheet') content = <WorksheetScreen name={name} style={style} opts={opts} variant={variant} onBack={() => setScreen('hub')} onExport={() => setShowExport(true)} />;
+      else if (screen === 'practice') content = <PracticeScreen name={name} style={style} opts={opts} variant={variant} onBack={() => setScreen('hub')} />;
 
       const crumbs = [
         { k: 'name', l: 'Name' },
@@ -109,14 +137,14 @@
                 <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M8 2v9M4 7l4 4 4-4M3 14h10"/></svg>
                 Export
               </button>
-              <button className="btn sm" onClick={() => { localStorage.removeItem('sigtutor:v1'); setScreen('name'); setName(tweaks.sampleName); setStyle('cursive'); setOpts({ flourish: 0.7, slant: 0.14, weight: 1.0 }); }}>
+              <button className="btn sm" onClick={() => { localStorage.removeItem('sigtutor:v2'); setScreen('name'); setName(tweaks.sampleName); setStyle(DEFAULT_STYLE); setOpts(defaultOptsFor(DEFAULT_STYLE)); setVariant(0); }}>
                 Restart
               </button>
             </div>
           </div>
           <div className="content">{content}</div>
 
-          {showExport && <ExportModal name={name} style={style} opts={opts} onClose={() => setShowExport(false)} />}
+          {showExport && <ExportModal name={name} style={style} opts={opts} variant={variant} onClose={() => setShowExport(false)} />}
 
           {editMode && (
             <div className="tweaks">
