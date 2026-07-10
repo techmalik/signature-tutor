@@ -110,7 +110,7 @@
       else if (screen === 'style') content = <StyleScreen name={name} selected={style} setSelected={selectStyle} onNext={() => setScreen('preview')} onBack={() => setScreen('name')} />;
       else if (screen === 'preview') content = <PreviewScreen name={name} style={style} opts={opts} setOpts={setOpts} variant={variant} setVariant={setVariant} onHub={() => setScreen('hub')} onBack={() => setScreen('style')} />;
       else if (screen === 'hub') content = <HubScreen name={name} style={style} opts={opts} variant={variant} go={go} onBack={() => setScreen('preview')} />;
-      else if (screen === 'worksheet') content = <WorksheetScreen name={name} style={style} opts={opts} variant={variant} onBack={() => setScreen('hub')} onExport={() => setShowExport(true)} />;
+      else if (screen === 'worksheet') content = <WorksheetScreen name={name} style={style} opts={opts} variant={variant} onBack={() => setScreen('hub')} />;
       else if (screen === 'practice') content = <PracticeScreen name={name} style={style} opts={opts} variant={variant} onBack={() => setScreen('hub')} />;
 
       const crumbs = [

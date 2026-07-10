@@ -26,6 +26,7 @@ const MANIFEST = [
   { id: 'glyph-data', file: 'src/glyph-data.js', type: 'plain' },
   { id: 'engine-core', file: 'src/engine-core.js', type: 'plain' },
   { id: 'signature-react', file: 'src/signature-react.jsx', type: 'babel' },
+  { id: 'exporters', file: 'src/exporters.js', type: 'plain' },
   { id: 'screens-1-3', file: 'src/screens-1-3.jsx', type: 'babel' },
   { id: 'screens-4-6', file: 'src/screens-4-6.jsx', type: 'babel' },
   { id: 'app', file: 'src/app.jsx', type: 'babel' },
