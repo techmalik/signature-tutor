@@ -1,14 +1,19 @@
 // Individual screen components — hi-fi.
 // Exported globally so main app can compose them.
 
-const STYLE_LIST = [
-  { key: 'cursive',   name: 'Classic Cursive',  desc: 'Flowing, readable',   famClass: 'fam-cursive' },
-  { key: 'executive', name: 'Executive',        desc: 'Sharp, confident',    famClass: 'fam-sacramento' },
-  { key: 'loopy',     name: 'Flourished',       desc: 'Romantic loops',      famClass: 'fam-loopy' },
-  { key: 'scrawl',    name: 'Quick Scrawl',     desc: 'Fast, practiced',     famClass: 'fam-scrawl' },
-  { key: 'sans',      name: 'Modern Print',     desc: 'Clean, legible',      famClass: 'fam-sans' },
-  { key: 'monogram',  name: 'Monogram',         desc: 'Just initials',       famClass: 'fam-monogram' },
-];
+const STYLE_DESCRIPTIONS = {
+  flow: 'Flowing, readable',
+  executive: 'Sharp, confident',
+  flourished: 'Romantic loops',
+  scrawl: 'Fast, practiced',
+  minimal: 'Clean, legible',
+  monogram: 'Just initials',
+};
+const STYLE_LIST = Object.keys(SIG_STYLES).map(key => ({
+  key,
+  name: SIG_STYLES[key].label,
+  desc: STYLE_DESCRIPTIONS[key] || '',
+}));
 
 function Logo() {
   return (
@@ -66,7 +71,7 @@ function NameScreen({ name, setName, onNext }) {
             <div style={{ flex: 1, minWidth: 200 }}>
               <div className="eyebrow" style={{ marginBottom: 4 }}>Preview</div>
               <div style={{ height: 60 }}>
-                <SignatureSVG name={name} style="cursive" opts={{ flourish: 0.7, slant: 0.14, weight: 1 }} height={60} />
+                <SignatureSVG name={name} style="flow" opts={{ flourish: 0.7, slant: 0.14, weight: 1 }} renderMode="ink" height={60} />
               </div>
             </div>
           </div>
@@ -109,7 +114,7 @@ function StyleScreen({ name, selected, setSelected, onNext, onBack }) {
               )}
             </div>
             <div className="preview">
-              <SignatureSVG name={name || 'Your Name'} style={s.key} opts={{ flourish: 0.6, slant: 0.12 }} height={80} />
+              <SignatureSVG name={name || 'Your Name'} style={s.key} opts={{ flourish: 0.6, slant: 0.12 }} renderMode="ink" height={80} />
             </div>
             <div style={{ fontSize: 12, color: 'var(--ink-3)', marginTop: 8 }}>{s.desc}</div>
           </div>
@@ -122,7 +127,7 @@ function StyleScreen({ name, selected, setSelected, onNext, onBack }) {
           <div className="faint" style={{ fontSize: 12 }}>{name || 'Your Name'}</div>
         </div>
         <div style={{ height: 150 }}>
-          <SignatureSVG name={name || 'Your Name'} style={selected} opts={{ flourish: 0.7, slant: 0.14 }} strokeW={2.8} height={150} />
+          <SignatureSVG name={name || 'Your Name'} style={selected} opts={{ flourish: 0.7, slant: 0.14 }} renderMode="ink" strokeW={2.8} height={150} />
         </div>
       </div>
 
@@ -141,7 +146,7 @@ function StyleScreen({ name, selected, setSelected, onNext, onBack }) {
 }
 
 // ─────────────── Screen 3: Preview / tweak ───────────────
-function PreviewScreen({ name, style, opts, setOpts, onHub, onBack }) {
+function PreviewScreen({ name, style, opts, setOpts, variant, setVariant, onHub, onBack }) {
   const [replayKey, setReplayKey] = React.useState(0);
   return (
     <div className="screen wrap" style={{ paddingTop: 24 }}>
@@ -167,7 +172,7 @@ function PreviewScreen({ name, style, opts, setOpts, onHub, onBack }) {
             </button>
           </div>
           <div style={{ height: 220, marginTop: 20 }}>
-            <SignatureSVG key={replayKey} name={name} style={style} opts={opts} strokeW={3} height={220} animate={true} />
+            <SignatureSVG key={replayKey} name={name} style={style} opts={opts} variant={variant} strokeW={3} height={220} animate={true} />
           </div>
         </div>
 
@@ -178,6 +183,7 @@ function PreviewScreen({ name, style, opts, setOpts, onHub, onBack }) {
             { key: 'flourish', label: 'Flourish', min: 0, max: 1, step: 0.01 },
             { key: 'slant', label: 'Slant', min: -0.1, max: 0.3, step: 0.01 },
             { key: 'weight', label: 'Weight', min: 0.7, max: 1.8, step: 0.05 },
+            { key: 'legibility', label: 'Legibility', min: 0.2, max: 1, step: 0.01 },
           ].map(s => (
             <div key={s.key} className="slider-row">
               <span className="lbl">{s.label}</span>
@@ -185,9 +191,9 @@ function PreviewScreen({ name, style, opts, setOpts, onHub, onBack }) {
               <span className="val">{(opts[s.key]).toFixed(2)}</span>
             </div>
           ))}
-          <button className="btn" style={{ width: '100%', marginTop: 14, justifyContent: 'center' }} onClick={() => setOpts({ flourish: Math.random(), slant: Math.random() * 0.3, weight: 0.8 + Math.random() * 0.8 })}>
+          <button className="btn" style={{ width: '100%', marginTop: 14, justifyContent: 'center' }} onClick={() => setVariant(v => v + 1)}>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><circle cx="8" cy="8" r="6"/><circle cx="5.5" cy="6.5" r="0.6" fill="currentColor"/><circle cx="10.5" cy="6.5" r="0.6" fill="currentColor"/><circle cx="5.5" cy="10" r="0.6" fill="currentColor"/><circle cx="10.5" cy="10" r="0.6" fill="currentColor"/><circle cx="8" cy="8" r="0.6" fill="currentColor"/></svg>
-            Randomize
+            Shuffle variant
           </button>
         </div>
       </div>
